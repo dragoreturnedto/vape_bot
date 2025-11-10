@@ -6,19 +6,32 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
-BOT_TOKEN = os.environ.get("TG_TOKEN")
+# === ПРОВЕРКА ТОКЕНА ===
+print("DEBUG TOKEN:", os.environ.get("TG_TOKEN"))  # <-- добавили проверку
+BOT_TOKEN = os.environ.get("TG_TOKEN") or os.environ.get("BOT_TOKEN")
+print("DEBUG TOKEN:", BOT_TOKEN)
+
 
 # === НАСТРОЙКИ ===
-CATALOG_FROM_CHAT_ID = -1003264765078
-CATALOG_MESSAGE_IDS = [2]
-ORDERS_CHAT_ID = -1003264765078
-SUPPORT_USERNAME = "Dragoreturnedto"
+CATALOG_FROM_CHAT_ID = -1003264765078   # канал, где лежит сообщение каталога
+CATALOG_MESSAGE_IDS = [2]               # список сообщений для копирования
+ORDERS_CHAT_ID = -1003264765078         # куда бот шлёт заявки
+SUPPORT_USERNAME = "Dragoreturnedto"    # админ
 DISCOUNTS_FILE = "discounts.txt"
 
+# === ДОП. БЕЗОПАСНОСТЬ ===
+ALLOWED_USERS = {123456789}  # <-- ЗАМЕНИ НА СВОЙ Telegram ID
 
 # === ИНИЦИАЛИЗАЦИЯ ===
 bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
 dp = Dispatcher(bot, storage=MemoryStorage())
+
+# === ФИЛЬТР БЕЗОПАСНОСТИ ===
+@dp.message_handler()
+async def guard(message: types.Message):
+    if message.from_user.id not in ALLOWED_USERS:
+        return
+    await dp.process_update(message)
 
 # === КЛАВИАТУРЫ ===
 def main_menu_kb():
@@ -91,7 +104,6 @@ async def cb_catalog(cb: types.CallbackQuery, state: FSMContext):
     await state.finish()
     await cb.answer()
 
-    # Копируем сообщение (или несколько) из канала
     for mid in CATALOG_MESSAGE_IDS:
         try:
             await bot.copy_message(
