@@ -17,7 +17,7 @@ if not BOT_TOKEN:
     raise SystemExit(1)
 
 # ===== ДОСТУП =====
-ALLOWED_USERS = {123456789}  # <-- ВСТАВЬ СВОЙ Telegram user_id
+ALLOWED_USERS = {5162850518}  # <-- ВСТАВЬ СВОЙ Telegram user_id
 
 # ===== ИНИЦИАЛИЗАЦИЯ =====
 bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
@@ -158,4 +158,3 @@ async def order_got_when(message: types.Message, state: FSMContext):
 if __name__ == "__main__":
     print("DEBUG TOKEN:", BOT_TOKEN)  # на Railway видно в логах, для контроля
     executor.start_polling(dp, skip_updates=True)
-
