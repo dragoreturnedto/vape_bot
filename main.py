@@ -5,17 +5,16 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from dotenv import load_dotenv
 
-load_dotenv()
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+BOT_TOKEN = os.environ.get("TG_TOKEN")
 
 # === НАСТРОЙКИ ===
-CATALOG_FROM_CHAT_ID = -1003264765078   # канал, где лежит сообщение каталога
-CATALOG_MESSAGE_IDS = [2]               # список сообщений для копирования
-ORDERS_CHAT_ID = -1003264765078         # куда бот шлёт заявки
-SUPPORT_USERNAME = "Dragoreturnedto"    # админ
+CATALOG_FROM_CHAT_ID = -1003264765078
+CATALOG_MESSAGE_IDS = [2]
+ORDERS_CHAT_ID = -1003264765078
+SUPPORT_USERNAME = "Dragoreturnedto"
 DISCOUNTS_FILE = "discounts.txt"
+
 
 # === ИНИЦИАЛИЗАЦИЯ ===
 bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
