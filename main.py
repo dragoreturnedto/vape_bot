@@ -20,7 +20,8 @@ SUPPORT_USERNAME = "Dragoreturnedto"    # админ
 DISCOUNTS_FILE = "discounts.txt"
 
 # === ДОП. БЕЗОПАСНОСТЬ ===
-ALLOWED_USERS = {123456789}  # <-- ЗАМЕНИ НА СВОЙ Telegram ID
+ALLOWED_USERS = {5328472512}  # сюда вставь свой ID
+  # <-- ЗАМЕНИ НА СВОЙ Telegram ID
 
 # === ИНИЦИАЛИЗАЦИЯ ===
 bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
