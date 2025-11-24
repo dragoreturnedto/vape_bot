@@ -7,7 +7,8 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 # === ТОКЕН ===
-BOT_TOKEN = os.environ["BOT_TOKEN"]  # Railway → переменная BOT_TOKEN
+BOT_TOKEN = "8584307597:AAGP-2iBVy7YNtlj53d2Mqh8hZUfGBW2Jo4"
+ # Railway → переменная BOT_TOKEN
 
 # === НАСТРОЙКИ ===
 CATALOG_FROM_CHAT_ID = -1003085974645   # канал/чат, где лежит сообщение каталога
