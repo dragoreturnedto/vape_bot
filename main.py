@@ -11,7 +11,8 @@ BOT_TOKEN = os.environ.get("TG_TOKEN")
 
 # === НАСТРОЙКИ ===
 CATALOG_FROM_CHAT_ID = -1003264765078   # канал, где лежит сообщение каталога
-CATALOG_MESSAGE_IDS = [3264765078/27]               # список сообщений для копирования
+# ID сообщения из ссылки https://t.me/c/3264765078/29  ->  29
+CATALOG_MESSAGE_IDS = [29]              # список сообщений для копирования
 ORDERS_CHAT_ID = -1003264765078         # куда бот шлёт заявки
 SUPPORT_USERNAME = "Dragoreturnedto"    # админ
 DISCOUNTS_FILE = "discounts.txt"
@@ -202,4 +203,3 @@ async def cmd_set_discounts(message: types.Message):
 if __name__ == "__main__":
     print("Бот запущен ✅")
     executor.start_polling(dp, skip_updates=True)
-
