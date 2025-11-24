@@ -7,17 +7,13 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 # === ТОКЕН ===
-BOT_TOKEN = "8584307597:AAGP-2iBVy7YNtlj53d2Mqh8hZUfGBW2Jo4"
- # Railway → переменная BOT_TOKEN
+BOT_TOKEN = os.environ["BOT_TOKEN"]  # Railway -> BOT_TOKEN
 
 # === НАСТРОЙКИ ===
-# === НАСТРОЙКИ ===
-CATALOG_FROM_CHAT_ID = -1003264765078   # из ссылки /c/3264765078/29
-CATALOG_MESSAGE_IDS = [29]              # ID сообщения = 29
-
-ORDERS_CHAT_ID = -1003085974645         # ЭТО МОЖЕТ БЫТЬ ЧАТ "заказы"
-        # куда бот отправляет заказы
-SUPPORT_USERNAME = "Dragoreturnedto"    # админ
+CATALOG_FROM_CHAT_ID = -1003264765078     # чат с каталогом
+CATALOG_MESSAGE_IDS = [29]                # сообщение каталога
+ORDERS_CHAT_ID = -1003264765078           # чат для заказов
+SUPPORT_USERNAME = "Dragoreturnedto"      # админ
 DISCOUNTS_FILE = "discounts.txt"
 
 # === ИНИЦИАЛИЗАЦИЯ ===
@@ -106,10 +102,7 @@ async def cb_catalog(cb: types.CallbackQuery, state: FSMContext):
             )
             break
 
-    await cb.message.answer(
-        "Выше — актуальные позиции. Можно оформить заказ:",
-        reply_markup=order_or_back_kb()
-    )
+    await cb.message.answer("Выше — актуальные позиции. Можно оформить заказ:", reply_markup=order_or_back_kb())
 
 # === КОНТАКТЫ ===
 @dp.callback_query_handler(lambda c: c.data == "menu_contacts", state="*")
