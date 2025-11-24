@@ -12,7 +12,7 @@ BOT_TOKEN = os.environ.get("TG_TOKEN")
 # === НАСТРОЙКИ ===
 CATALOG_FROM_CHAT_ID = -1003264765078   # канал, где лежит сообщение каталога
 # ID сообщения из ссылки https://t.me/c/3264765078/29  ->  29
-CATALOG_MESSAGE_IDS = [29]              # список сообщений для копирования
+CATALOG_MESSAGE_IDS = [10]              # список сообщений для копирования
 ORDERS_CHAT_ID = -1003264765078         # куда бот шлёт заявки
 SUPPORT_USERNAME = "Dragoreturnedto"    # админ
 DISCOUNTS_FILE = "discounts.txt"
