@@ -10,10 +10,9 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 BOT_TOKEN = os.environ.get("TG_TOKEN")
 
 # === НАСТРОЙКИ ===
-CATALOG_FROM_CHAT_ID = -1003264765078   # канал, где лежит сообщение каталога
-# ID сообщения из ссылки https://t.me/c/3264765078/29  ->  29
-CATALOG_MESSAGE_IDS = [10]              # список сообщений для копирования
-ORDERS_CHAT_ID = -1003264765078         # куда бот шлёт заявки
+CATALOG_FROM_CHAT_ID = -1003085974645   # канал/чат, где лежит сообщение каталога
+CATALOG_MESSAGE_IDS = [10]              # ID сообщения из https://t.me/c/3085974645/10
+ORDERS_CHAT_ID = -1003085974645         # куда бот шлёт заявки (можешь поменять, если нужно другое место)
 SUPPORT_USERNAME = "Dragoreturnedto"    # админ
 DISCOUNTS_FILE = "discounts.txt"
 
@@ -102,7 +101,7 @@ async def cb_catalog(cb: types.CallbackQuery, state: FSMContext):
         except Exception as e:
             await cb.message.answer(
                 f"⚠️ Не удалось скопировать сообщение {mid}.\n"
-                f"Проверь, что бот добавлен в канал и имеет доступ к сообщениям.\n\n{e}"
+                f"Проверь, что бот добавлен в канал/чат и имеет доступ к сообщениям.\n\n{e}"
             )
             break
 
