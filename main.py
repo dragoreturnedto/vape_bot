@@ -11,10 +11,12 @@ BOT_TOKEN = "8584307597:AAGP-2iBVy7YNtlj53d2Mqh8hZUfGBW2Jo4"
  # Railway → переменная BOT_TOKEN
 
 # === НАСТРОЙКИ ===
-CATALOG_FROM_CHAT_ID = -1003085974645   # канал/чат, где лежит сообщение каталога
-CATALOG_MESSAGE_IDS = [10]              # ID сообщения из https://t.me/c/3085974645/10
+# === НАСТРОЙКИ ===
+CATALOG_FROM_CHAT_ID = -1003264765078   # из ссылки /c/3264765078/29
+CATALOG_MESSAGE_IDS = [29]              # ID сообщения = 29
 
-ORDERS_CHAT_ID = -1003085974645         # куда бот отправляет заказы
+ORDERS_CHAT_ID = -1003085974645         # ЭТО МОЖЕТ БЫТЬ ЧАТ "заказы"
+        # куда бот отправляет заказы
 SUPPORT_USERNAME = "Dragoreturnedto"    # админ
 DISCOUNTS_FILE = "discounts.txt"
 
