@@ -7,12 +7,13 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 # === ТОКЕН ===
-BOT_TOKEN = os.environ.get("TG_TOKEN")
+BOT_TOKEN = os.environ["BOT_TOKEN"]  # Railway → переменная BOT_TOKEN
 
 # === НАСТРОЙКИ ===
 CATALOG_FROM_CHAT_ID = -1003085974645   # канал/чат, где лежит сообщение каталога
 CATALOG_MESSAGE_IDS = [10]              # ID сообщения из https://t.me/c/3085974645/10
-ORDERS_CHAT_ID = -1003085974645         # куда бот шлёт заявки (можешь поменять, если нужно другое место)
+
+ORDERS_CHAT_ID = -1003085974645         # куда бот отправляет заказы
 SUPPORT_USERNAME = "Dragoreturnedto"    # админ
 DISCOUNTS_FILE = "discounts.txt"
 
@@ -75,13 +76,10 @@ async def cmd_help(message: types.Message):
 # === НАЗАД В МЕНЮ ===
 @dp.callback_query_handler(lambda c: c.data == "menu_main", state="*")
 async def cb_main(cb: types.CallbackQuery, state: FSMContext):
-    try:
-        await state.finish()
-    except Exception:
-        pass
+    await state.finish()
     try:
         await cb.message.edit_text("Главное меню:", reply_markup=main_menu_kb())
-    except Exception:
+    except:
         await cb.message.answer("Главное меню:", reply_markup=main_menu_kb())
     await cb.answer()
 
@@ -101,11 +99,14 @@ async def cb_catalog(cb: types.CallbackQuery, state: FSMContext):
         except Exception as e:
             await cb.message.answer(
                 f"⚠️ Не удалось скопировать сообщение {mid}.\n"
-                f"Проверь, что бот добавлен в канал/чат и имеет доступ к сообщениям.\n\n{e}"
+                f"Проверь, что бот добавлен в канал и имеет доступ к сообщениям.\n\n{e}"
             )
             break
 
-    await cb.message.answer("Выше — актуальные позиции. Можно оформить заказ:", reply_markup=order_or_back_kb())
+    await cb.message.answer(
+        "Выше — актуальные позиции. Можно оформить заказ:",
+        reply_markup=order_or_back_kb()
+    )
 
 # === КОНТАКТЫ ===
 @dp.callback_query_handler(lambda c: c.data == "menu_contacts", state="*")
@@ -141,62 +142,61 @@ async def order_start(cb: types.CallbackQuery, state: FSMContext):
     await cb.answer()
     await cb.message.answer(
         "🛒 <b>Сделать заказ</b>\n"
-        "Напишите товары, которые выбрали (название и количество). Пример:\n"
-        "<i>ElfBar BC5000 — 2 шт; Жидкость Salt 30мл — 1 шт (манго)</i>",
+        "Напишите товары, которые выбрали (название и количество).",
         reply_markup=back_menu_kb()
     )
     await OrderForm.items.set()
 
 @dp.message_handler(state=OrderForm.items)
-async def order_got_items(message: types.Message, state: FSMContext):
+async def order_items(message: types.Message, state: FSMContext):
     await state.update_data(items=message.text.strip())
-    await message.answer("Отлично! Теперь укажите <b>адрес доставки</b> (улица, дом, подъезд/этаж).")
+    await message.answer("Укажите <b>адрес доставки</b>:")
     await OrderForm.address.set()
 
 @dp.message_handler(state=OrderForm.address)
-async def order_got_address(message: types.Message, state: FSMContext):
+async def order_address(message: types.Message, state: FSMContext):
     await state.update_data(address=message.text.strip())
-    await message.answer("И последнее — напишите <b>дату и время</b> доставки (например: сегодня 19:30).")
+    await message.answer("Укажите <b>дату и время</b>:")
     await OrderForm.when.set()
 
 @dp.message_handler(state=OrderForm.when)
-async def order_got_when(message: types.Message, state: FSMContext):
-    user = message.from_user
+async def order_when(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    items = data.get("items", "—")
-    address = data.get("address", "—")
-    when = message.text.strip()
+    user = message.from_user
 
     text = (
         "🆕 <b>Новый заказ</b>\n"
-        f"👤 Пользователь: <a href='tg://user?id={user.id}'>{user.full_name}</a> (@{user.username or '—'})\n"
-        f"🛍 Позиции: {items}\n"
-        f"📍 Адрес: {address}\n"
-        f"⏰ Время: {when}\n"
+        f"👤 Пользователь: <a href='tg://user?id={user.id}'>{user.full_name}</a>\n"
+        f"🛍 Позиции: {data['items']}\n"
+        f"📍 Адрес: {data['address']}\n"
+        f"⏰ Время: {message.text}\n"
         f"🆔 User ID: <code>{user.id}</code>"
     )
 
     try:
         await bot.send_message(ORDERS_CHAT_ID, text)
     except Exception as e:
-        await message.answer(f"⚠️ Не удалось отправить заказ. Проверь, что бот добавлен в чат.\n\n{e}")
+        await message.answer(f"⚠️ Ошибка отправки заказа:\n{e}")
 
     await message.answer("Спасибо! Заявка отправлена ✅", reply_markup=main_menu_kb())
     await state.finish()
 
-# === АДМИН: СКИДКИ ===
+# === АДМИН ===
 @dp.message_handler(commands=["setdiscounts"])
 async def cmd_set_discounts(message: types.Message):
     if (message.from_user.username or "").lower() != SUPPORT_USERNAME.lower():
-        await message.answer("Эта команда доступна только администратору.")
+        await message.answer("Команда только для администратора.")
         return
+
     args = message.get_args()
     if not args:
-        await message.answer("Использование: <code>/setdiscounts текст скидок</code>")
+        await message.answer("Использование: <code>/setdiscounts текст</code>")
         return
+
     with open(DISCOUNTS_FILE, "w", encoding="utf-8") as f:
         f.write(args)
-    await message.answer("Текст скидок обновлён ✅")
+
+    await message.answer("Скидки обновлены ✅")
 
 # === ЗАПУСК ===
 if __name__ == "__main__":
